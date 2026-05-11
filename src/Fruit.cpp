@@ -1,5 +1,5 @@
-#include "Fruit.h"
-#include "Snake.h"   //To use PairHash
+#include "Fruit.hpp"
+#include "Snake.hpp"   //To use PairHash
 #include <stdexcept> //To throw error if the board is full
 #include <cstdlib>   //rand(), srand()
 #include <ctime>     //time()
@@ -9,7 +9,7 @@
 //Instead of generating random positions repeatedly it scans the entire grid and collect empty cells than randomly choose one of them
 
 
-//generate a valid fruit position
+//generate a valid fruit position.
 void Fruit::place(int gridW, int gridH,
                   const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells) //Contains all snake body positions
 {
