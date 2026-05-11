@@ -14,7 +14,7 @@
 
 
 
-// simple test system (won't use GoogleTest)
+// simple test system (won't use GoogleTest )
 
 //to track results
 static int passed = 0;
