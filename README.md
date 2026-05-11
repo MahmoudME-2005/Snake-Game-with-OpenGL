@@ -2,6 +2,23 @@
 
 A classic Snake game built in C++ using OpenGL and GLUT, featuring a modern shader-based renderer, decorative wall layouts, a HUD, pause/game-over overlays, and a fixed-function fallback renderer for environments where shaders are unavailable.
 
+################################################
+  #                                              #
+  #     Score: 0042        High Score: 0100      #
+  #                                              #
+  #   ########################################   #
+  #   #                                      #   #
+  #   #              oooooo                  #   #
+  #   #                   o                  #   #
+  #   #      @            o                  #   #
+  #   #                   o                  #   #
+  #   #        oooooooooooo                  #   #
+  #   #                                      #   #
+  #   ########################################   #
+  #                                              #
+  #        [W] Up  [S] Down  [A] Left  [D] Right #
+  ################################################
+
 ![Snake Game Screenshot](screenshot.png)
 
 ---
