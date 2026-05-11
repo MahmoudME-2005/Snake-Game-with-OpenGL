@@ -1,4 +1,4 @@
-#include "Renderer.h"
+#include "Renderer.hpp"
 
 #ifdef __APPLE__
 #  include <OpenGL/gl3.h>
@@ -41,10 +41,7 @@ What other files can use from this file:
 ===============================================================================
 */
 
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <vector>
+
 
 // ─── Theme colours ────────────────────────────────────────────────────────
 
@@ -69,9 +66,12 @@ static constexpr C3 COL_HUD_BG  = {0.08f, 0.08f, 0.08f};
 // Reads a shader text file from disk and returns the full file content
 // If the file cannot be opened, returns an empty string and logs the problem
 // ─────────────────────────────────────────────────────────────────────────────
-std::string Renderer::loadFile(const std::string& path) {
+std::string Renderer::loadFile(const std::string& path)
+{
     std::ifstream f(path);
-    if (!f.is_open()) {
+
+    if (!f.is_open())
+    {
         std::cerr << "[Renderer] Cannot open shader: " << path << "\n";
         return "";
     }
@@ -85,7 +85,8 @@ std::string Renderer::loadFile(const std::string& path) {
 // Compiles one GLSL shader object. The type is usually GL_VERTEX_SHADER or
 // GL_FRAGMENT_SHADER. Returns 0 if compilation fails
 // ─────────────────────────────────────────────────────────────────────────────
-unsigned int Renderer::compileShader(unsigned int type, const std::string& src) {
+unsigned int Renderer::compileShader(unsigned int type, const std::string& src)
+{
     unsigned int id = glCreateShader(type);
     const char* c   = src.c_str();
     glShaderSource(id, 1, &c, nullptr);
@@ -93,7 +94,8 @@ unsigned int Renderer::compileShader(unsigned int type, const std::string& src) 
 
     int ok;
     glGetShaderiv(id, GL_COMPILE_STATUS, &ok);
-    if (!ok) {
+    if (!ok)
+    {
         char log[512];
         glGetShaderInfoLog(id, 512, nullptr, log);
         std::cerr << "[Renderer] Shader compile error:\n" << log << "\n";
@@ -108,12 +110,14 @@ unsigned int Renderer::compileShader(unsigned int type, const std::string& src) 
 // Main setup function for the renderer
 // Must be called after a valid OpenGL/GLUT window/context already exists
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::init(const std::string& vertPath, const std::string& fragPath) {
+void Renderer::init(const std::string& vertPath, const std::string& fragPath)
+{
 #ifndef __APPLE__
     // GLEW loads modern OpenGL function pointers on Windows/Linux
     // Without this, functions such as glCreateShader may not be available
     glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
+    if (glewInit() != GLEW_OK)
+    {
         std::cerr << "[Renderer] GLEW init failed – falling back to fixed pipeline.\n";
         return;
     }
@@ -122,7 +126,8 @@ void Renderer::init(const std::string& vertPath, const std::string& fragPath) {
     // Load shader source files from disk
     std::string vertSrc = loadFile(vertPath);
     std::string fragSrc = loadFile(fragPath);
-    if (vertSrc.empty() || fragSrc.empty()) {
+    if (vertSrc.empty() || fragSrc.empty())
+    {
         std::cerr << "[Renderer] Shader source missing – falling back to fixed pipeline.\n";
         return;
     }
@@ -140,7 +145,8 @@ void Renderer::init(const std::string& vertPath, const std::string& fragPath) {
 
     int ok;
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &ok);
-    if (!ok) {
+    if (!ok)
+    {
         char log[512];
         glGetProgramInfoLog(shaderProgram, 512, nullptr, log);
         std::cerr << "[Renderer] Program link error:\n" << log << "\n";
@@ -185,7 +191,8 @@ void Renderer::init(const std::string& vertPath, const std::string& fragPath) {
 //  reshape()
 // Called when the window size changes. Currently only updates the viewport
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::reshape(int w, int h) {
+void Renderer::reshape(int w, int h)
+{
     glViewport(0, 0, w, h);
 }
 
@@ -195,7 +202,8 @@ void Renderer::reshape(int w, int h) {
 // col/row are grid coordinates; inset creates a small margin inside the cell
 // ─────────────────────────────────────────────────────────────────────────────
 
-void Renderer::drawCellShader(int col, int row, float r, float g, float b, int inset) {
+void Renderer::drawCellShader(int col, int row, float r, float g, float b, int inset)
+{
     // Convert grid coordinates to pixel coordinates
     // The game grid treats row 0 as the top row below the HUD
     // OpenGL pixel coordinates here are bottom-up, so the row is flipped
@@ -456,7 +464,8 @@ void Renderer::drawFallback(const Game& game) {
     cellPx(game.getFruit().getX(), game.getFruit().getY(), COL_FRUIT, 3);
 
     bool head = true;
-    for (auto& seg : game.getSnake().getBody()) {
+    for (auto& seg : game.getSnake().getBody())
+    {
         cellPx(seg.first, seg.second, head ? COL_SNAKE_H : COL_SNAKE_B, head ? 1 : 2);
         head = false;
     }

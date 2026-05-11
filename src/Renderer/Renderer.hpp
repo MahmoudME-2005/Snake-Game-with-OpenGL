@@ -1,6 +1,10 @@
 #pragma once
-#include "Game.h"
+#include "../Game/Game.hpp"
 #include <string>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <vector>
 /*
 ===============================================================================
 File: Renderer.h
@@ -34,7 +38,8 @@ What other files can use from this file:
 ===============================================================================
 */
 
-class Renderer {
+class Renderer
+{
 public:
     // Load & compile shaders, set up GL state.
     // Call once after the GLUT window is created.

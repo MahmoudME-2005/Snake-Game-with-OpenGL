@@ -5,11 +5,10 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/src",
-        "C:/msys64/ucrt64/include",
-        "C:/msys64/ucrt64/include/GL"
+        "E:/MSYS2/mingw64/include"
       ],
       "defines": [],
-      "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+      "compilerPath": "E:/MSYS2/mingw64/bin/g++.exe",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "windows-gcc-x64"
