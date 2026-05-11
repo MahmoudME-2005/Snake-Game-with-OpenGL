@@ -1,6 +1,8 @@
 .vs/
 [Dd]ebug/
 [Rr]elease/
+obj/
+build/
 *.exe
 *.obj
 *.slnx
