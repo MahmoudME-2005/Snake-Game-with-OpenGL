@@ -1,32 +1,41 @@
 #pragma once
+
+/*
+===============================================================================
+File: Fruit.hpp
+Changes from original:
+ - Replaced `#include "Snake.hpp"` with `#include "Common.hpp"`.
+   Fruit only needed PairHash from Snake.hpp, which now lives in Common.hpp.
+   This breaks the circular-ish dependency (Fruit.hpp -> Snake.hpp -> ...).
+ - Removed the forward declaration `struct PairHash;` — it was redundant since
+   the full definition is now included via Common.hpp.
+ - Removed duplicate standard library includes that Common.hpp already covers.
+===============================================================================
+*/
+
+#include "../Common.hpp"
 #include <unordered_set>
 #include <utility>
-#include "Snake.hpp"   //To use PairHash
-#include <stdexcept> //To throw error if the board is full
-#include <cstdlib>   //rand(), srand()
-#include <ctime>     //time()
-#include <vector>   //Store all available empty cells
-
-// Reuse PairHash from Snake.h
-struct PairHash;   // forward declaration from Snake.h
+#include <stdexcept>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
 
 class Fruit
 {
 public:
-    // Spawns the fruit at a random position that avoids occupied cells.
-    // occupiedCells should contain every grid position taken by the snake body and walls.
-    Fruit(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
+    Fruit(int gridW, int gridH,
+          const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
 
-    // Picks a new random position, again avoiding occupiedCells.
-    // Call this immediately after the snake eats the fruit.
-    void respawn(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
+    void respawn(int gridW, int gridH,
+                 const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
 
     int getX() const;
     int getY() const;
 
 private:
-    int x, y;
+    int x = 0, y = 0;
 
-    // Shared placement logic used by both constructor and respawn().
-    void place(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
+    void place(int gridW, int gridH,
+               const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells);
 };

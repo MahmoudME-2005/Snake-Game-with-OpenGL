@@ -233,7 +233,8 @@ void Renderer::drawCellShader(int col, int row, float r, float g, float b, int i
 // Draws simple GLUT bitmap text in the current OpenGL projection
 // Text drawing uses the fixed-function pipeline for simplicity
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::drawText(int px, int py, const std::string& s, void* font) {
+void Renderer::drawText(int px, int py, const std::string& s, void* font)
+{
     if (!font) font = GLUT_BITMAP_HELVETICA_18;
     glRasterPos2i(px, py);
     for (char ch : s) glutBitmapCharacter(font, ch);
@@ -243,7 +244,8 @@ void Renderer::drawText(int px, int py, const std::string& s, void* font) {
 //  drawHUD()
 // Draws the top HUD strip with score, best score, and pause status text
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::drawHUD(const Game& game) {
+void Renderer::drawHUD(const Game& game)
+{
     // Save the current matrices because this function temporarily switches to
     // a 2D pixel coordinate projection for easy HUD drawing
     glMatrixMode(GL_PROJECTION);
@@ -285,7 +287,8 @@ void Renderer::drawHUD(const Game& game) {
 //  drawOverlay() 
 // Draws the pause or game-over panel when the game is not actively playing
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::drawOverlay(const Game& game) {
+void Renderer::drawOverlay(const Game& game)
+{
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
@@ -309,7 +312,8 @@ void Renderer::drawOverlay(const Game& game) {
     glEnd();
     glDisable(GL_BLEND);
 
-    if (st == GameState::GAME_OVER) {
+    if (st == GameState::GAME_OVER)
+    {
         glColor3f(COL_OVER.r, COL_OVER.g, COL_OVER.b);
         drawText(WIN_W/2 - 68, WIN_H/2 + 20, "GAME  OVER",
                 GLUT_BITMAP_TIMES_ROMAN_24);
@@ -319,7 +323,9 @@ void Renderer::drawOverlay(const Game& game) {
                 GLUT_BITMAP_HELVETICA_18);
         drawText(WIN_W/2 - 90, WIN_H/2 - 40,
                 "Press R to restart", GLUT_BITMAP_HELVETICA_12);
-    } else {
+    }
+    else
+    {
         glColor3f(COL_SNAKE_H.r, COL_SNAKE_H.g, COL_SNAKE_H.b);
         drawText(WIN_W/2 - 42, WIN_H/2 + 10, "PAUSED",
                 GLUT_BITMAP_TIMES_ROMAN_24);
@@ -336,7 +342,8 @@ void Renderer::drawOverlay(const Game& game) {
 //  draw()  
 // Public rendering entry point. Called once per frame by the game loop
 // ─────────────────────────────────────────────────────────────────────────────
-void Renderer::draw(const Game& game) {
+void Renderer::draw(const Game& game)
+{
     glClearColor(COL_BG.r, COL_BG.g, COL_BG.b, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -392,7 +399,8 @@ void Renderer::draw(const Game& game) {
 
     // Draw snake. The first segment is treated as the head
     bool head = true;
-    for (auto& seg : game.getSnake().getBody()) {
+    for (auto& seg : game.getSnake().getBody())
+    {
         if (head)
             drawCellShader(seg.first, seg.second,
                         COL_SNAKE_H.r, COL_SNAKE_H.g, COL_SNAKE_H.b, 1);
@@ -423,7 +431,8 @@ void Renderer::draw(const Game& game) {
 // Backup renderer that does not require GLSL shaders
 // This helps the program still display something if shader loading fails
 // -----------------------------------------------------------------------------
-void Renderer::drawFallback(const Game& game) {
+void Renderer::drawFallback(const Game& game)
+{
 // Use pixel coordinates for the whole window
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -432,7 +441,8 @@ void Renderer::drawFallback(const Game& game) {
     glLoadIdentity();
 
     // Local helper for drawing a rectangle in pixel coordinates
-    auto drawRect = [](int px, int py, int w, int h) {
+    auto drawRect = [](int px, int py, int w, int h)
+    {
         glBegin(GL_QUADS);
         glVertex2i(px,   py);   glVertex2i(px+w, py);
         glVertex2i(px+w, py+h); glVertex2i(px,   py+h);
@@ -441,7 +451,8 @@ void Renderer::drawFallback(const Game& game) {
 
     // Local helper that converts grid cell coordinates to pixel coordinates
     // row 0 is the top row of the playable grid area
-    auto cellPx = [&](int col, int row, const C3& c, int inset) {
+    auto cellPx = [&](int col, int row, const C3& c, int inset)
+    {
         int px = col * CELL + inset;
         int py = HUD_H + (GRID_H - row - 1) * CELL + inset;
         glColor3f(c.r, c.g, c.b);

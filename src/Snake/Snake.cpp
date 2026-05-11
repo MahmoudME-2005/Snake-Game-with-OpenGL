@@ -41,13 +41,18 @@ pair<int, int> Snake::nextHeadPosition() const
 
 
 //The logic of moving adding a head in the front of the body and renove from the tail
-void Snake:: move()
+bool Snake:: move()
 {
 	pair<int, int>  newHead = nextHeadPosition();
+
+	if (!(this->bodySet.find(newHead) == this->bodySet.end()))
+	{
+		return false;
+	}
+
 	//Get the new head position and push it to the front of the body  deque and bodySet and also to the set for quick lookup
 	this->body.push_front(newHead);
 	this->bodySet.insert(newHead);
-
 
 	//If the snake is not growing, we need to remove the tail segment to maintain the same length. If it is growing, we keep the tail and reset the pendingGrow flag for the next move.
 	if (!pendingGrow)
@@ -59,7 +64,8 @@ void Snake:: move()
 	{
 		this->pendingGrow = false;
 	}
-	
+
+	return true;
 }
 
 
@@ -68,7 +74,7 @@ void Snake:: move()
 // Setter method:)
 void Snake::grow()
 {
-		pendingGrow = true;
+	pendingGrow = true;
 }
 
 
@@ -85,23 +91,9 @@ void Snake::setDirection(Direction newDir)
     }
 }
 
-
-
-
-//checks if the nextHeadPosition() is already present in bodySet
-//as the BodySet is unordered_set , it stores unique elements and allows for O(1) time complexity when checking for the presence of the head position. If the head position is found more than once in the bodySet, it indicates a collision with itself.
-bool Snake::checkSelfCollision() const
-{
-    // Check if the head collides with any other part of the body
-    const pair<int, int>& head = this->body.front();
-    return this->bodySet.count(head) > 1;
-}
-
-
-
 //it maybe forensure that the food is not placed on the snake body, we can use this method to check if the snake occupies a specific coordinate (x, y) before placing food there. By using an unordered_set (bodySet) to track the coordinates of the snake's body segments, we can efficiently check for occupancy in O(1) time complexity.
 //The occupies method checks if the snake occupies a specific coordinate (x, y) by looking it up in the bodySet. This allows for O(1) time complexity when checking for collisions or food placement.
 bool Snake::occupies(int x, int y) const
 {
-    return bodySet.count({x, y}) > 0;
+    return this->bodySet.count({x, y}) > 0;
 }

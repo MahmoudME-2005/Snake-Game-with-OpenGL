@@ -1,4 +1,19 @@
 #pragma once
+
+/*
+===============================================================================
+File: Snake.hpp
+Changes from original:
+ - Removed local PairHash definition. It now lives in Common.hpp so Snake,
+   Wall, and Fruit all use the exact same type. This fixes the type mismatch
+   when sets are passed between these classes.
+ - Added #include "Common.hpp" to pull in PairHash, constants, and GameState.
+ - Removed `using namespace std;` from the header — it pollutes every file
+   that includes Snake.hpp. std:: is written explicitly instead.
+===============================================================================
+*/
+
+#include "../Common.hpp"   // PairHash, GRID_W/H, WIN_W/H, GameState
 #include <deque>
 #include <unordered_set>
 #include <utility>
@@ -6,39 +21,32 @@
 
 using namespace std;
 
-// Custom hasher — needed because STL has no default hash for pair<int,int>
-//we want to do unordered-set(template library stores unique elements) to prevent collisions (bit shift <<16)
-struct PairHash
-{
-    size_t operator()(const pair<int, int>& p) const
-    {
-        return hash<int>()(p.first) ^ (hash<int>()(p.second) << 16);
-    }
-};
-
 enum class Direction { UP, DOWN, LEFT, RIGHT };
 
 class Snake
 {
 public:
-    Snake(int startX, int startY); //done
+    Snake(int startX, int startY);
 
-    void move(); //done
-    void grow(); //done
-    void setDirection(Direction newDir); //done
+    bool move();
+    void grow();
+    void setDirection(Direction newDir);
 
-    bool checkSelfCollision() const; //done
-	bool occupies(int x, int y) const;    // O(1) via unordered_set //done
+    bool occupies(int x, int y) const;
 
-    pair<int, int> getHead() const; //done
-    const deque<pair<int, int>>& getBody() const;//done
+    std::pair<int,int>                                    getHead() const;
+    const std::deque<std::pair<int,int>>&                 getBody() const;
+
+    // Expose the body set so Game::buildOccupied() can include snake cells
+    // when placing the fruit without iterating the deque separately.
+    const std::unordered_set<std::pair<int,int>, PairHash>& getBodySet() const
+    { return bodySet; }
 
 private:
-    deque<pair<int, int>> body; //Track the order of the Snake segmgent ,that moving by adding a head and remove a tail
-   unordered_set<pair<int, int>, PairHash> bodySet; // track the existence of the segment 
-    Direction direction;
-    bool pendingGrow;
+    std::deque<std::pair<int,int>>                        body;
+    std::unordered_set<std::pair<int,int>, PairHash>      bodySet;
+    Direction                                             direction;
+    bool                                                  pendingGrow;
 
-    pair<int, int> nextHeadPosition() const; //done
+    std::pair<int,int> nextHeadPosition() const;
 };
-

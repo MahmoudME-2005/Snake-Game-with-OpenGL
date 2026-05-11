@@ -32,7 +32,8 @@ uniform vec2 uOffset;    // pixel offset (bottom-left of cell after inset)
 uniform vec2 uCellSize;  // pixel size of the cell after inset
 uniform vec2 uWinSize;   // full window size in pixels (WIN_W, WIN_H)
 
-void main() {
+void main()
+{
     // Scale unit square to cell size, then translate to offset
     vec2 pixelPos = aPos * uCellSize + uOffset;
 

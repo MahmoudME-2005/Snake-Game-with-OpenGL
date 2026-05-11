@@ -32,7 +32,7 @@ bool Wall::isValid(const pair<int,int> &pos) const
 }
 
 // for the gui
-const unordered_set<pair<int,int>, pairHash>& Wall::getWalls() const
+const unordered_set<pair<int,int>, PairHash>& Wall::getWalls() const
 {
     return this->walls;
 }
