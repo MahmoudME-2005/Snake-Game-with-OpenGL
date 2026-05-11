@@ -1,20 +1,75 @@
 # Snake Game
 
-A classic Snake game built in C++ using OpenGL and GLUT, featuring a modern shader-based renderer, decorative wall layouts, a HUD, pause/game-over overlays, and a fixed-function fallback renderer for environments where shaders are unavailable.
-
-![Snake Game Screenshot](screenshot.png)
+```
+########################################################
+#                                                      #
+#      SCORE: 0042            HIGH SCORE: 0100         #
+#                                                      #
+#   ################################################   #
+#   # . . . . . . . . . . . . . . . . . . . . . .  #   #
+#   # . . . . . . . . . . . . . . . . . . . . . .  #   #
+#   # . . . . . . . . █ █ █ █ █ █ . . . . . . . .  #   #
+#   # . . . . . . . . █ . . . . . . . . . . . . .  #   #
+#   # . . . ▣ . . . . █ . . . . . . . . . . . . .  #   #
+#   # . . . . . . . . █ . . . . . . . . . . . . .  #   #
+#   # . . . . █ █ █ █ █ . . . . . . . . . . . . .  #   #
+#   # . . . . . . . . . . . . . . . . . . . . . .  #   #
+#   # . . . . . . . . . . . . . . . . . . . . . .  #   #
+#   ################################################   #
+#                                                      #
+#      CONTROLS: [W] UP  [S] DOWN  [A] LEFT  [D] RIGHT #
+########################################################
+```
 
 ---
 
-## Features
+## Group Members
 
-- Smooth OpenGL rendering with GLSL shaders (vertex + fragment)
-- Automatic fallback to fixed-function OpenGL if shaders fail to load
-- HUD displaying current score and all-time best score
-- Pause and game-over overlays
-- Customizable wall layouts including a full border arena and decorative symmetric barriers
-- Self-collision and wall-collision detection
-- Clean separation of concerns across dedicated classes
+| Name | ID |
+|---|---|
+| Mahmoud Ehab Moheb | 2301085 |
+| Salsabil Ali Mahmoud | 2300127 |
+| Mariam Maged Mohammad | 2300670 |
+| Asmaa Salaheldin Abdelhamid Saleh | 2300181 |
+| Youssef Sameh Nazir | 2300544 |
+
+---
+
+## Project Description
+
+A classic Snake game implemented in C++ using OpenGL and GLUT. The player steers a growing snake around a walled arena, eating fruit to score points while avoiding walls and self-collision. The project was built as part of a Data Structures and Algorithms course, with a focus on selecting the right data structure for each game subsystem to achieve correct and efficient behavior.
+
+The renderer uses a GLSL shader pipeline for drawing grid cells, with an automatic fallback to the fixed-function OpenGL pipeline if shaders fail to load. The game features a live HUD, pause and game-over overlays, a persistent best score, and a decorative symmetric wall layout inside a full border arena.
+
+---
+
+## Selected Data Structures and Why
+
+### `std::deque<pair<int,int>>` — Snake Body
+
+The snake's body is stored as a double-ended queue. Every move adds a new head to the front and removes the tail from the back. Both operations are O(1), which is exactly what a deque is optimized for. A vector would require shifting all elements on every move, making it O(n) per frame — unacceptable for a real-time game loop.
+
+### `std::unordered_set<pair<int,int>, PairHash>` — Snake Body Set and Wall Set
+
+Two hash sets run alongside the deque: one mirrors the snake body, one stores wall positions. Both exist purely for O(1) average-case collision lookup. Without them, checking whether the snake's next head position collides with its own body or a wall would require an O(n) linear scan through the deque or wall list every tick. A custom `PairHash` was implemented since the C++ standard library does not provide a default hash for `pair<int,int>`.
+
+### `std::vector<pair<int,int>>` — Fruit Free-Cell Sampling
+
+When placing the fruit, the algorithm scans every cell in the grid once (O(n)) and collects all cells not occupied by the snake or walls into a vector. It then picks a random index in O(1). This guarantees the fruit always lands on a valid free cell without repeated random retries that could loop indefinitely when the board is nearly full.
+
+---
+
+## Implemented Features
+
+- GLSL shader-based OpenGL renderer with automatic fixed-function fallback
+- Snake movement with queue-based head enqueue / tail dequeue logic
+- Self-collision and wall-collision detection using O(1) hash set lookup
+- Fruit placement using full free-cell scan to guarantee valid spawn positions
+- Full border arena wall with decorative symmetric interior barriers
+- Live HUD showing current score and best score
+- Pause overlay (P key) and game-over overlay with restart support (R key)
+- Best score preserved across restarts within the same session
+- Configurable snake speed via `TICK_MS` constant in `main.cpp`
 
 ---
 
@@ -58,43 +113,53 @@ Snake/
 | GLUT / FreeGLUT | Window creation, input, game loop timer |
 | GLEW | Loading modern OpenGL function pointers (Windows/Linux only) |
 
-### Installing dependencies on Windows (MSYS2)
+---
 
+## How to Compile and Run
+
+### Windows (MSYS2 / MinGW)
+
+**1. Install dependencies:**
 ```bash
 pacman -S mingw-w64-x86_64-freeglut
 pacman -S mingw-w64-x86_64-glew
 ```
 
-### Installing dependencies on Linux
-
-```bash
-sudo apt install freeglut3-dev libglew-dev
-```
-
-### macOS
-
-GLUT is included with Xcode. No extra installation needed. GLEW is not used on macOS.
-
----
-
-## Building
-
+**2. Build:**
 ```bash
 make
 ```
 
-This compiles all source files into `obj/` and links the executable to `build/SnakeGame.exe` (or `build/SnakeGame` on Linux/macOS).
-
-### Running
-
+**3. Run:**
 ```bash
 make run
 ```
 
-### Cleaning build artifacts
-
+**4. Clean build artifacts:**
 ```bash
 make clean
+```
+
+### Linux
+
+**1. Install dependencies:**
+```bash
+sudo apt install freeglut3-dev libglew-dev
+```
+
+**2. Build and run:**
+```bash
+make
+make run
+```
+
+### macOS
+
+GLUT is bundled with Xcode. GLEW is not needed on macOS.
+
+```bash
+make
+make run
 ```
 
 ---
@@ -110,40 +175,15 @@ make clean
 
 ---
 
-## Gameplay
+## AI Usage Declaration
 
-- The snake grows by one segment each time it eats the red fruit
-- Each fruit eaten scores 10 points
-- The best score is preserved across restarts within the same session
-- The snake dies if it hits a wall or itself
-- The map is surrounded by a border wall — there is no wrapping
+This project was developed with the assistance of Claude (Anthropic) as an AI pair-programming tool. AI was used to:
 
----
+- Review and debug code across all project files
+- Generate and refine the `Game` class, `main.cpp`, and `Common.hpp`
+- Identify architectural issues such as duplicate `PairHash` definitions and mismatched getter names between classes
+- Fix Makefile linking errors
+- Identify and fix the `uWinSize` uniform being looked up every frame instead of being cached
+- Generate the wall layout and this README
 
-## Architecture Overview
-
-| Class | Responsibility |
-|---|---|
-| `Game` | Owns Snake, Fruit, Wall. Drives the update loop, collision checks, scoring, and state transitions |
-| `Snake` | Tracks body segments using a deque and a hash set. Handles movement, growth, and self-collision |
-| `Fruit` | Scans all free grid cells and picks one at random for placement |
-| `Wall` | Stores static wall positions in a hash set for O(1) collision lookup |
-| `Renderer` | Reads game state and draws everything using OpenGL. Never modifies game state |
-| `Common.hpp` | Single source of truth for grid size, window size, `PairHash`, and `GameState` |
-
----
-
-## Shader Pipeline
-
-The renderer uses a minimal two-stage GLSL pipeline:
-
-- **vertex.glsl** — receives a unit square vertex, scales it to cell size, translates it to the correct pixel position, then converts to NDC
-- **fragment.glsl** — outputs a solid colour set per draw call via the `uColor` uniform
-
-If shader loading or compilation fails at startup, the renderer automatically falls back to the fixed-function OpenGL pipeline so the game remains playable.
-
----
-
-## License
-
-This project is open source. Feel free to use, modify, and distribute it.
+All AI-suggested code was reviewed, understood, and integrated by the team. The data structure choices, game logic, and overall architecture were designed and directed by the group.
