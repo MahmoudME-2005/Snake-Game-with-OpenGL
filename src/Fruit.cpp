@@ -1,5 +1,5 @@
-#include "Fruit.h"
-#include "Snake.h"   //To use PairHash
+#include "Fruit.hpp"
+#include "Snake.hpp"   //To use PairHash
 #include <stdexcept> //To throw error if the board is full
 #include <cstdlib>   //rand(), srand()
 #include <ctime>     //time()
