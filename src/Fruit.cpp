@@ -5,13 +5,10 @@
 #include <ctime>     //time()
 #include <vector>   //Store all available empty cells
 
-
 //Instead of generating random positions repeatedly it scans the entire grid and collect empty cells than randomly choose one of them
 
-
-//generate a valid fruit position
-void Fruit::place(int gridW, int gridH,
-                  const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells) //Contains all snake body positions
+//generate a valid fruit position.
+void Fruit::place(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells) //Contains all snake body positions
 {
     std::vector<std::pair<int,int>> freeCells; //This vector will contain every empty position
 
@@ -20,15 +17,22 @@ void Fruit::place(int gridW, int gridH,
 
     //Loop on every cell in the grid
     for (int col = 0; col < gridW; ++col)
+    {
         for (int row = 0; row < gridH; ++row)
-
+        {
             //If the cell is not occupied by the snake add it to freeCells
             if (occupiedCells.find({col, row}) == occupiedCells.end())
+            {
                 freeCells.push_back({col, row}); //end iterator
+            }
+        }
+    }
 
     //If there are no free cells then the whole grid is full
     if (freeCells.empty())
+    {
         throw std::runtime_error("Fruit::place — no free cell available (grid is full)");
+    }
 
     //Pick a random free cell
     int idx = rand() % static_cast<int>(freeCells.size()); //cause rand() generates big integers that may be larger than our grid size
@@ -40,8 +44,7 @@ void Fruit::place(int gridW, int gridH,
 }
 
 //Constructor >> Runs automatically when object is created
-Fruit::Fruit(int gridW, int gridH,
-             const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells)
+Fruit::Fruit(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells)
 {
     //Seed the random generator
     //Initialize the random generator using the current time so results differ every run
@@ -53,8 +56,7 @@ Fruit::Fruit(int gridW, int gridH,
 }
 
 //Called when the snake eats the fruit
-void Fruit::respawn(int gridW, int gridH,
-                    const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells)
+void Fruit::respawn(int gridW, int gridH, const std::unordered_set<std::pair<int,int>, PairHash>& occupiedCells)
 {
     //Generate a new fruit position
     place(gridW, gridH, occupiedCells);
