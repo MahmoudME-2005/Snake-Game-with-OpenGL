@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 #include "Snake.hpp"
-#include "Fruit.h"
+#include "Fruit.hpp"
 #include "Wall.hpp"
 
 //This file is just to verify that verything behaves correctly and makes it easier to debugg and know which part is causing the eror
