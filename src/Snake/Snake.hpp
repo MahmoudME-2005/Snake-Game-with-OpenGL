@@ -19,11 +19,11 @@ public:
     Snake(int startX, int startY); //done
 
     void move(); //done
-    void grow();
-    void setDirection(Direction newDir); 
+    void grow(); //done
+    void setDirection(Direction newDir); //done
 
-    bool checkSelfCollision() const;
-    bool occupies(int x, int y) const;    // O(1) via unordered_set
+    bool checkSelfCollision() const; //done
+	bool occupies(int x, int y) const;    // O(1) via unordered_set //done
 
     pair<int, int> getHead() const; //done
     const deque<pair<int, int>>& getBody() const;//done
